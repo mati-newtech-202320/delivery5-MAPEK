@@ -14,12 +14,15 @@ spec:
     spec:
       containers:
         - name: mapek-container
-          image: payment-mapek:latest
+          image: quay.io/jcepedav/payment-mapek:latest
+          envFrom:
+            - configMapRef:
+                name: mapek-payment-config
           resources:
             limits:
-              cpu: 1000 mi
+              cpu: 1000m
               memory: 1Gi
             requests:
-              cpu: 1000 mi
+              cpu: 1000m
               memory: 1Gi
-          serviceAccountName: mapek-sa
+      serviceAccountName: mapek-sa

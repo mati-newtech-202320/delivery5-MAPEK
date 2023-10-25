@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mapek-payment-config
+  namespace: juank1400-dev
+immutable: false
+data:
+  DEPLOYMENT_NAME: python-basic
+  K8S_NAMESPACE: juank1400-dev
+  PROMETHEUS_URL: 'http://prometheus-k8s'
