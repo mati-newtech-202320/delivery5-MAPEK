@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mapek-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mapek
+  template:
+    metadata:
+      labels:
+        app: mapek
+    spec:
+      containers:
+        - name: mapek-container
+          image: payment-mapek:latest
+          resources:
+            limits:
+              cpu: 1000 mi
+              memory: 1Gi
+            requests:
+              cpu: 1000 mi
+              memory: 1Gi
+          serviceAccountName: mapek-sa
