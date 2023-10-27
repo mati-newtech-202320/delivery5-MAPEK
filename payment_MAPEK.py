@@ -47,8 +47,8 @@ def scale_deployment(namespace, deployment_name, replicas):
         print(f"Error: {str(e)}")
 
 if __name__ == "__main__":
-    custom_metric_value = get_custom_metric_value()
-
+    #custom_metric_value = get_custom_metric_value()
+    custom_metric_value = 5
     # Define scaling logic based on custom metric value
     if custom_metric_value > threshold:
         desired_replicas = 3  # Adjust the desired number of replicas
