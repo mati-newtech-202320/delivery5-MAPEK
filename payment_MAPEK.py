@@ -7,6 +7,7 @@ from prometheus_api_client import PrometheusConnect
 prometheus_url = os.environ.get('PROMETHEUS_URL', 'http://prometheus-k8s')
 k8s_namespace = os.environ.get('K8S_NAMESPACE', 'juank1400-dev')
 deployment_name = os.environ.get('DEPLOYMENT_NAME', 'python-basic')
+threshold = os.environ.get('THRESHOLD', '3')
 
 def get_custom_metric_value():
 
