@@ -1,4 +1,6 @@
 import os
+import time
+
 from kubernetes import client, config
 import requests
 from prometheus_api_client import PrometheusConnect
@@ -26,7 +28,7 @@ def get_custom_metric_value():
 def scale_deployment(namespace, deployment_name, replicas):
     try:
         # Load Kubernetes configuration
-        config.load_kube_config()
+        config.load_incluster_config()
 
         api_instance = client.AppsV1Api()
         deployment = api_instance.read_namespaced_deployment(
@@ -47,12 +49,20 @@ def scale_deployment(namespace, deployment_name, replicas):
     except Exception as e:
         print(f"Error: {str(e)}")
 
-if __name__ == "__main__":
-    #custom_metric_value = get_custom_metric_value()
-    custom_metric_value = 5
-    # Define scaling logic based on custom metric value
-    if custom_metric_value > threshold:
-        desired_replicas = 3  # Adjust the desired number of replicas
+def mapek(k8s_namespace, deployment_name):
+    while True:
+        #custom_metric_value = get_custom_metric_value()
+        custom_metric_value = 5
+        # Define scaling logic based on custom metric value
+        if custom_metric_value > int(threshold):
+            desired_replicas = 3  # Adjust the desired number of replicas
 
-        # Scale the deployment based on the custom metric
-        scale_deployment(k8s_namespace, deployment_name, desired_replicas)
+            # Scale the deployment based on the custom metric
+            scale_deployment(k8s_namespace, deployment_name, desired_replicas)
+        else:
+            print(f"Don't configuration changes required.")
+        time.sleep(30)
+
+
+if __name__ == "__main__":
+    mapek(k8s_namespace, deployment_name)
