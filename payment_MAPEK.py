@@ -6,7 +6,7 @@ import requests
 from prometheus_api_client import PrometheusConnect
 
 # Retrieve environment variables or set default values
-prometheus_url = os.environ.get('PROMETHEUS_URL', 'http://prometheus-k8s')
+prometheus_url = os.environ.get('PROMETHEUS_URL', 'https://prometheus-k8s-openshift-monitoring.apps.rosa-bmwnq.bjni.p1.openshiftapps.com')
 k8s_namespace = os.environ.get('K8S_NAMESPACE', 'juank1400-dev')
 deployment_name = os.environ.get('DEPLOYMENT_NAME', 'python-basic')
 threshold = os.environ.get('THRESHOLD', '3')
@@ -51,7 +51,7 @@ def scale_deployment(namespace, deployment_name, replicas):
 
 def mapek(k8s_namespace, deployment_name):
     while True:
-        custom_metric_value = get_custom_metric_value()
+        # custom_metric_value = get_custom_metric_value()
         custom_metric_value = 5
         # Define scaling logic based on custom metric value
         if custom_metric_value > int(threshold):
