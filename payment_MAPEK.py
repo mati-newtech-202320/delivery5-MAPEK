@@ -51,7 +51,7 @@ def scale_deployment(namespace, deployment_name, replicas):
 
 def mapek(k8s_namespace, deployment_name):
     while True:
-        #custom_metric_value = get_custom_metric_value()
+        custom_metric_value = get_custom_metric_value()
         custom_metric_value = 5
         # Define scaling logic based on custom metric value
         if custom_metric_value > int(threshold):
