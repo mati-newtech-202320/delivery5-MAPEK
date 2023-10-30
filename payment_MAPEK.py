@@ -39,6 +39,7 @@ def scale_deployment(namespace, deployment_name, replicas):
         )
 
         # Update the number of replicas
+        new_replicas = deployment.spec.replicas + replicas
         deployment.spec.replicas = deployment.spec.replicas + replicas
 
         # Apply the changes
@@ -47,7 +48,7 @@ def scale_deployment(namespace, deployment_name, replicas):
             namespace=namespace,
             body=deployment
         )
-        print(f"Deployment '{deployment_name}' scaled to {replicas} replicas.")
+        print(f"Deployment '{deployment_name}' scaled to {new_replicas} replicas.")
     except Exception as e:
         print(f"Error: {str(e)}")
 
