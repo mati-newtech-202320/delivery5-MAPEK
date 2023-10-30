@@ -1,5 +1,6 @@
 import os
 import time
+import random
 
 from kubernetes import client, config
 import requests
@@ -9,7 +10,7 @@ from prometheus_api_client import PrometheusConnect
 prometheus_url = os.environ.get('PROMETHEUS_URL', 'https://prometheus-k8s-openshift-monitoring.apps.rosa-bmwnq.bjni.p1.openshiftapps.com')
 k8s_namespace = os.environ.get('K8S_NAMESPACE', 'juank1400-dev')
 deployment_name = os.environ.get('DEPLOYMENT_NAME', 'python-basic')
-threshold = os.environ.get('THRESHOLD', '3')
+threshold = os.environ.get('THRESHOLD', '0.000505')
 
 def get_custom_metric_value():
 
@@ -23,7 +24,8 @@ def get_custom_metric_value():
     # Make an HTTP request to the Prometheus API using the environment variable
     # response = requests.get(prometheus_url+"/api/v1/query?query=sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace='{"+k8s_namespace+"}'}) by (pod)")
     # data = response.json()
-    return result['data']['result'][0]['value'][1]  # Extract the metric value
+
+    return float(result['data']['result'][0]['value'][1])  # Extract the metric value
 
 def scale_deployment(namespace, deployment_name, replicas):
     try:
@@ -37,7 +39,7 @@ def scale_deployment(namespace, deployment_name, replicas):
         )
 
         # Update the number of replicas
-        deployment.spec.replicas = replicas
+        deployment.spec.replicas = deployment.spec.replicas + replicas
 
         # Apply the changes
         api_instance.replace_namespaced_deployment(
@@ -52,15 +54,22 @@ def scale_deployment(namespace, deployment_name, replicas):
 def mapek(k8s_namespace, deployment_name):
     while True:
         # custom_metric_value = get_custom_metric_value()
-        custom_metric_value = 5
+        custom_metric_value = 0.00045 + 0.0001*float(random.randrange(1, 100, 1))
+
         # Define scaling logic based on custom metric value
-        if custom_metric_value > int(threshold):
-            desired_replicas = 3  # Adjust the desired number of replicas
+        if custom_metric_value > float(threshold):
+            desired_replicas = 1 
 
             # Scale the deployment based on the custom metric
             scale_deployment(k8s_namespace, deployment_name, desired_replicas)
         else:
-            print(f"Don't configuration changes required.")
+            if custom_metric_value < float(threshold)*1.01:
+                desired_replicas = -1 
+
+                # Scale the deployment based on the custom metric
+                scale_deployment(k8s_namespace, deployment_name, desired_replicas)
+            else:
+                print(f"Don't configuration changes required.")
         time.sleep(30)
 
 
